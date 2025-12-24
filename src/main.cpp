@@ -1,24 +1,35 @@
+#if __has_include(<fmt/core.h>)
 #include <fmt/core.h>
 #include <fmt/color.h>
-#include <sqlite3.h>
+#define HAS_FMT 1
+#else
+#define HAS_FMT 0
+#endif
 
-#ifdef EMSCRIPTEN
-#include <emscripten.h>
+#if defined(__EMSCRIPTEN__)
+#include <emscripten/emscripten.h>
+#define WASM_EXPORT EMSCRIPTEN_KEEPALIVE
+#else
+#define WASM_EXPORT
 #endif
 
 extern "C" {
-	EMSCRIPTEN_KEEPALIVE
+	WASM_EXPORT
 	int add (int a, int b) {
+#if HAS_FMT
 		fmt::print(fg(fmt::color::green), "Hello, World!\n");
+#endif
 		return a + b;
 	}
 }
 
-EMSCRIPTEN_KEEPALIVE
+WASM_EXPORT
 int main(int argc, const char** argv) {
-#if defined(EMSCRIPTEN)
+#if defined(__EMSCRIPTEN__)
 	if (argc > 0) {
+#if HAS_FMT
 		fmt::print(fg(fmt::color::green), "Hello, World!\n");
+#endif
 	}
 	return 0;
 #endif
