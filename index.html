@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>learning webassembly cpp</title>
+  <script>
+    // Must be defined BEFORE loading `worker.js` so Emscripten can reuse it.
+    window.Module = window.Module || {};
+    // Keep the runtime alive so JS can call exported functions after `main()` returns.
+    window.Module.noExitRuntime = true;
+    // We don't need to run `main()` for this demo (only `add`), so avoid auto-running it.
+    window.Module.noInitialRun = true;
+    window.Module.onRuntimeInitialized = function () {
+      const btn = document.getElementById("wasm");
+      if (btn) btn.disabled = false;
+      console.log("webassembly loaded");
+      window.dispatchEvent(new Event("wasm:ready"));
+    };
+  </script>
+  <script src="build-web/worker.js"></script>
+</head>
+<body>
+  <p id="out"></p>
+  <input type="number" id="a">
+  <input type="number" id="b">
+  <button id="wasm" disabled>trigger</button>
+  <script src="public/script.js"></script>
+</body>
+</html>
