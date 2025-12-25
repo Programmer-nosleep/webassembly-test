@@ -1,3 +1,5 @@
+#include <string>
+
 #if __has_include(<fmt/core.h>)
 #include <fmt/core.h>
 #include <fmt/color.h>
@@ -22,6 +24,9 @@ extern "C" {
 		return a + b;
 	}
 }
+
+extern "C" const char* adding_some_values(const char* val);
+extern "C" void free_string(void* p);
 
 WASM_EXPORT
 int main(int argc, const char** argv) {

@@ -17,6 +17,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build-web)
 
 file(GLOB SOURCE_FILES
 	"src/main.cpp"
+	"src/stream.cpp"
 )
 
 # Include sub-projects.
@@ -26,13 +27,15 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 # Emscripten specific settings
 if(EMSCRIPTEN)
 	target_link_options(${PROJECT_NAME} PRIVATE
-    "-sNO_EXIT_RUNTIME=1"
-    "-sEXIT_RUNTIME=0"
+    "-sNO_EXIT_RUNTIME=0"
+    "-sEXIT_RUNTIME=1"
     "-sFORCE_FILESYSTEM=0"
-    "-sEXPORTED_FUNCTIONS=['_add','_main']"
+    "-sEXPORTED_FUNCTIONS=['_add','_main','_adding_some_values','_free_string']"
     "-sEXPORTED_RUNTIME_METHODS=['ccall','cwrap']"
-    "-sINITIAL_MEMORY=134217728"
-    "-sSTACK_SIZE=1048576"
+    "-sALLOW_MEMORY_GROWTH=1"
+    # "-sINITIAL_MEMORY=8388608"
+    # "-sMAXIMUM_MEMORY=67108864"
+    # "-sSTACK_SIZE=1048576"
     "-sASSERTIONS=1"
   )
   set_target_properties(${PROJECT_NAME} PROPERTIES
