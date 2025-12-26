@@ -4,46 +4,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>learning webassembly cpp</title>
-  <script>
+    <script>
     // Must be defined BEFORE loading `worker.js` so Emscripten can reuse it.
     window.Module = window.Module || {};
     window.Module.noExitRuntime = true;
     window.Module.onInitialRun  = true;
 
-    window.Module.instantiateWasm = function (imports, successCallback) {
-      const url = "build-web/worker.wasm?v=" + Date.now();
+    /*
+      window.Module.instantiateWasm = function (imports, successCallback) {
+        const url = "build-web/worker.wasm?v=" + Date.now();
 
-      // Coba streaming dulu (butuh server kirim Content-Type: application/wasm)
-      if (WebAssembly.instantiateStreaming) {
-        WebAssembly.instantiateStreaming(fetch(url), imports)
-          .then(({ instance, module }) => successCallback(instance, module))
-          .catch(async (e) => {
-            console.warn("instantiateStreaming failed, fallback to ArrayBuffer:", e);
+        // Coba streaming dulu (butuh server kirim Content-Type: application/wasm)
+        if (WebAssembly.instantiateStreaming) {
+          WebAssembly.instantiateStreaming(fetch(url), imports)
+            .then(({ instance, module }) => successCallback(instance, module))
+            .catch(async (e) => {
+              console.warn("instantiateStreaming failed, fallback to ArrayBuffer:", e);
 
-            const res = await fetch(url);
+              const res = await fetch(url);
+              if (!res.ok) throw new Error(`fetch failed: HTTP ${res.status}`);
+              const buf = await res.arrayBuffer();
+
+              const { instance, module } = await WebAssembly.instantiate(buf, imports);
+              successCallback(instance, module);
+            });
+
+          return {}; // async path
+        }
+
+        fetch(url)
+          .then((res) => {
             if (!res.ok) throw new Error(`fetch failed: HTTP ${res.status}`);
-            const buf = await res.arrayBuffer();
-
-            const { instance, module } = await WebAssembly.instantiate(buf, imports);
-            successCallback(instance, module);
-          });
+            return res.arrayBuffer();
+          })
+          .then((buf) => WebAssembly.instantiate(buf, imports))
+          .then(({ instance, module }) => successCallback(instance, module))
+          .catch((e) => console.error("instantiateWasm failed:", e));
 
         return {}; // async path
-      }
-
-      fetch(url)
-        .then((res) => {
-          if (!res.ok) throw new Error(`fetch failed: HTTP ${res.status}`);
-          return res.arrayBuffer();
-        })
-        .then((buf) => WebAssembly.instantiate(buf, imports))
-        .then(({ instance, module }) => successCallback(instance, module))
-        .catch((e) => console.error("instantiateWasm failed:", e));
-
-      return {}; // async path
-    };
+      };
+    */
   </script>
-  <script src="build-web/worker.js"></script>
+  <!-- <script src="build-web/worker.js"></script> -->
   <style>
     :root {
       font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -74,10 +76,10 @@
 </head>
 <body>
   <p id="out"></p>
-  <!-- <input type="number" id="a">
-  <input type="number" id="b"> -->
-  <input type="text" id="value">
+  <!-- <input type="number" id="a" value="1">
+  <input type="number" id="b" value="2"> -->
+  <input type="text" id="val">
   <button id="wasm">output</button>
-  <script src="public/script.js"></script>
+  <script type="module" src="public/script.js"></script>
 </body>
 </html>

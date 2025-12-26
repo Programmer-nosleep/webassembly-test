@@ -15,18 +15,11 @@
 #define WASM_EXPORT
 #endif
 
-extern "C" {
-	WASM_EXPORT
-	int add (int a, int b) {
-#if HAS_FMT
-		fmt::print(fg(fmt::color::green), "Hello, World!\n");
-#endif
-		return a + b;
-	}
-}
-
+extern "C" int add(int a, int b);
 extern "C" const char* adding_some_values(const char* val);
 extern "C" void free_string(void* p);
+
+std::string just_string_you_can_output_from_the_console_browser(const std::string& val);
 
 WASM_EXPORT
 int main(int argc, const char** argv) {
