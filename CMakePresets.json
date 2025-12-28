@@ -17,7 +17,7 @@
                 "rhs": "Windows"
             }
         },
-         {
+        {
             "name": "emscripten-wasm",
             "displayName": "Emscripten (WASM)",
             "generator": "Ninja",
@@ -38,6 +38,27 @@
                 "type": "equals",
                 "lhs": "${hostSystemName}",
                 "rhs": "Windows"
+            }
+        },
+        {
+            "name": "emscripten-wasm-linux",
+            "displayName": "Emscripten (WASM, Linux)",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "environment": {
+                "EMSDK": "$env{HOME}/emsdk",
+                "PATH": "$penv{PATH}:$env{HOME}/emsdk:$env{HOME}/emsdk/upstream/emscripten"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_TOOLCHAIN_FILE": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
             }
         },
         {
@@ -101,6 +122,14 @@
             }
         },
         {
+            "name": "linux-release",
+            "displayName": "Linux Release",
+            "inherits": "linux-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
             "name": "macos-debug",
             "displayName": "macOS Debug",
             "generator": "Ninja",
@@ -131,6 +160,25 @@
                 "EMSDK_PYTHON": "C:/emsdk/python/3.13.3_64bit/python.exe",
                 "PATH": "$penv{PATH};$env{USERPROFILE}/scoop/shims;C:/emsdk;C:/emsdk/upstream/emscripten"
             }
+        },
+        {
+            "name": "emscripten-wasm-linux",
+            "displayName": "Emscripten (WASM, Linux)",
+            "configurePreset": "emscripten-wasm-linux",
+            "environment": {
+                "EMSDK": "$env{HOME}/emsdk",
+                "PATH": "$penv{PATH}:$env{HOME}/emsdk:$env{HOME}/emsdk/upstream/emscripten"
+            }
+        },
+        {
+            "name": "linux-debug",
+            "displayName": "Linux Debug",
+            "configurePreset": "linux-debug"
+        },
+        {
+            "name": "linux-release",
+            "displayName": "Linux Release",
+            "configurePreset": "linux-release"
         }
     ]
 }
